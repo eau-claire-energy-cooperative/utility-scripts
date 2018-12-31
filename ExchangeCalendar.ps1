@@ -60,7 +60,15 @@ elseif ($Action -eq "Add"){
 	foreach($c in $Calendars)
 	{
 		log -Message "Adding as $AccessRights to $c"
-		Add-MailboxFolderPermission -Identity ($c + ":\Calendar") -User $User -AccessRights $AccessRights
+		
+		Try{
+			Add-MailboxFolderPermission -Identity ($c + ":\Calendar") -User $User -AccessRights $AccessRights -ErrorAction Stop
+		}
+		Catch [System.Management.Automation.RemoteException]
+		{
+			log -Message "permissions already exist, trying to set them instead"
+			Set-MailboxFolderPermission -Identity ($c + ":\Calendar") -User $User -AccessRights $AccessRights
+		}
 	}
 }
 elseif ($Action -eq "Remove"){
