@@ -11,7 +11,7 @@ except ImportError as ie:
 
 __author__ = "Rob Weber"
 __email__ = "rweber@ecec.com"
-__version__ = "1.0"
+__version__ = "1.1"
 
 def getStatus():
 
@@ -26,10 +26,10 @@ def getStatus():
 
     for aRow in rows:
         #get the current status (returns list)
-        status = aRow.xpath('td[1]/span')
+        status = aRow.xpath('td[1]/img')
 
         #split to get service:status pair
-        splitString = status[0].get('title').split(':')
+        splitString = status[0].get('alt').split(':')
 
         result[splitString[0]] = splitString[1].lower()
 
