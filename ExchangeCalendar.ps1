@@ -64,7 +64,7 @@ elseif ($Action -eq "Add"){
 		Try{
 			Add-MailboxFolderPermission -Identity ($c + ":\Calendar") -User $User -AccessRights $AccessRights -ErrorAction Stop
 		}
-		Catch [System.Management.Automation.RemoteException]
+		Catch
 		{
 			log -Message "permissions already exist, trying to set them instead"
 			Set-MailboxFolderPermission -Identity ($c + ":\Calendar") -User $User -AccessRights $AccessRights
