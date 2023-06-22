@@ -10,7 +10,7 @@ __email__ = "rweber@ecec.com"
 __version__ = "1.2"
 
 RECORD_TYPES = ['generic', 'phone']
-PASSWORD_TYPES = ['clear', 'md5', 'nt']
+PASSWORD_TYPES = ['clear', 'md5', 'nt', 'none']
 PASSWORD_MATRIX = {'clear': 'Cleartext-Password', 'md5': 'MD5-Password', 'nt': 'NT-Password'}
 
 def is_mac(username):
@@ -59,7 +59,10 @@ def generate_auth_line(username, password, r_type, p_type):
       hash = hashlib.md5(password.encode())
       password = hash.hexdigest()
 
-  return f"{username}  {PASSWORD_MATRIX[p_type]} := {password}{generate_control_pairs(control_pairs)}"
+  if(p_type != 'none'):
+    return f"{username}  {PASSWORD_MATRIX[p_type]} := {password}{generate_control_pairs(control_pairs)}"
+  else:
+    return f"{username}  {generate_control_pairs(control_pairs)}"
 
 #setup the cli parser
 parser = argparse.ArgumentParser(description='generate a freeradius authorization file from a spreadsheet')
@@ -71,9 +74,9 @@ parser.add_argument('-A', '--append', action='store_true',
 parser.add_argument('-u', '--user_column', required=False, type=int, default=1, help='Column number that contains the username')
 parser.add_argument('-p', '--pass_column', required=False, type=int, default=2, help='Column number that contains the password')
 parser.add_argument('-t', '--type_column', required=False, type=int, default=0,
-                   help='Column number that contains the device type column, options are phone or generic. -1 assumes all types are generic (no designated column)')
+                   help='Column number that contains the device type column, options are phone, or generic. -1 assumes all types are generic (no designated column)')
 parser.add_argument('-a','--auth_column', required=False, type=int, default=-1,
-                   help="Column number that contains the auth type column, options are clear, md5 or nt. -1 defaults to clear text (no designated column)")
+                   help="Column number that contains the auth type column, options are none, clear, md5 or nt. -1 defaults to clear text (no designated column)")
 parser.add_argument('-v','--vlan', required=False, type=int,
                    help="If a VLAN should be returned as part of the auth response - default is no")
 args = parser.parse_args(sys.argv[1:])
