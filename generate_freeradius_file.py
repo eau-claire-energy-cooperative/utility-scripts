@@ -14,7 +14,7 @@ PASSWORD_TYPES = ['clear', 'md5', 'nt', 'none']
 PASSWORD_MATRIX = {'clear': 'Cleartext-Password', 'md5': 'MD5-Password', 'nt': 'NT-Password'}
 
 def is_mac(username):
-  return re.search("^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$", username)
+  return re.search("^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$", username.strip())
 
 def generate_control_pairs(controls):
   if(len(controls) > 0):
@@ -43,7 +43,7 @@ def generate_auth_line(username, password, r_type, p_type):
 
   # if username is a MAC format for sent format
   if(is_mac(username)):
-    username = username.replace('-', '').lower()
+    username = username.replace('-', '').replace(':','').lower()
 
   # generate a password if one isn't set
   if(pandas.isnull(password)):
