@@ -2,7 +2,7 @@
 .SYNOPSIS
     Exchange Calendar Helper script
 .DESCRIPTION
-    Automates some Exchang calendar permission functions. Assumes you are connected to an Exchange shell via Connect-EXOPSSession -UserPrincipalName "identity" already
+    Automates some Exchang calendar permission functions. Assumes you have the ExchangeOnlineManagement powershell library installed: https://learn.microsoft.com/en-us/powershell/exchange/exchange-online-protection-powershell
 .PARAMETER Action
     A valid action, either Check, All, Add, or Remove. Check is for permissions on the current calendar, All is calendars the user has permission for
 .PARAMETER User
@@ -26,6 +26,15 @@ param(
 [Parameter(Mandatory=$false,Position=3)][ValidateSet("Author","Contributor","Owner","NonEditingAuthor","AvailabilityOnly","Reviewer","Editor","None","LimitedDetails")][string]$AccessRights = "LimitedDetails"
 )
 
+# import the module if not already imported
+if (Get-Module | Where-Object {$_.Name -eq "ExchangeOnlineManagement") {
+	write-host "Module is already imported."
+}
+else
+{
+	Import-Module ExchangeOnlineManagement
+	Connect-ExchangeOnline
+}
 #Tab character for output
 $Tab = [char]9
 
