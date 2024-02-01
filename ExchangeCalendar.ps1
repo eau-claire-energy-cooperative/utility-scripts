@@ -27,7 +27,7 @@ param(
 )
 
 # import the module if not already imported
-if (Get-Module | Where-Object {$_.Name -eq "ExchangeOnlineManagement") {
+if (Get-Module | Where-Object ($_.Name -eq "ExchangeOnlineManagement")) {
 	write-host "Module is already imported."
 }
 else
